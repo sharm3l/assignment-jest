@@ -12,19 +12,43 @@
     "factor" in this context is an environmental factor that influences the yield.
  */
 
-const getYieldForPlant = (plant) => {
-  return plant.yield;
+const getYieldForPlant = (plant, environment) => {
+  const start = plant.yield;
+
+  // when no environment is given we keep it simple
+  if (!environment) {
+    return start;
+  }
+
+  // find all given environment keys
+  return Object.keys(environment).reduce((acc, key) => {
+    // get the value of the specific environment and look up its factor in the plant info given
+    return (acc * (100 + plant.factor[key][environment[key]])) / 100;
+    // start with our yield to begin with
+  }, start);
 };
 
-const getYieldForCrop = (input) => {
-  return input.crop.yield * input.numCrops;
+const getYieldForCrop = (input, environment) => {
+  const start = input.crop.yield * input.numCrops;
+
+  // when no environment is given we keep it simple
+  if (!environment) {
+    return start;
+  }
+
+  // find all given environment keys
+  return Object.keys(environment).reduce((acc, key) => {
+    // get the value of the specific environment and look up its factor in the plant info given
+    return (acc * (100 + input.crop.factor[key][environment[key]])) / 100;
+    // start with our yield to begin with
+  }, start);
 };
 
 const getTotalYield = (inputs) => {
   const { crops } = inputs;
 
   return crops.reduce((acc, item) => {
-    acc = acc + item.crop.yield * item.numCrops;
+    acc = acc + getYieldForCrop(item);
 
     return acc;
   }, 0);
