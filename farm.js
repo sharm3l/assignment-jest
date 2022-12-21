@@ -30,8 +30,34 @@ const getTotalYield = (inputs) => {
   }, 0);
 };
 
+const getCostsForCrop = (input) => {
+  return input.numCrops * 1;
+};
+
+const getRevenueForCrop = (input) => {
+  return getYieldForCrop(input) * 2;
+};
+
+const getProfitForCrop = (input) => {
+  return getRevenueForCrop(input) - getCostsForCrop(input);
+};
+
+const getTotalProfit = (inputs) => {
+  const { crops } = inputs;
+
+  return crops.reduce((acc, item) => {
+    acc = acc + getProfitForCrop(item);
+
+    return acc;
+  }, 0);
+};
+
 module.exports = {
   getYieldForPlant,
   getYieldForCrop,
   getTotalYield,
+  getCostsForCrop,
+  getRevenueForCrop,
+  getProfitForCrop,
+  getTotalProfit,
 };
